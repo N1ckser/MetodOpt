@@ -1,0 +1,70 @@
+public class GoldenSectionSearch {
+
+    // Функция, минимум которой мы ищем
+    public static double f(double x) {
+        return -Math.log(x) / x;
+    }
+
+    // Метод золотого сечения
+    public static double goldenSectionSearch(double a, double b, double epsilon) {
+        double phi = (Math.sqrt(5) - 1) / 2; // Золотое сечение
+        double x1 = b - phi * (b - a); // Первая точка
+        double x2 = a + phi * (b - a); // Вторая точка
+        double f1 = f(x1); // Значение функции в x1
+        double f2 = f(x2); // Значение функции в x2
+        int iterations = 0; // Счетчик итераций
+        int functionEvaluations = 2; // Счетчик вычислений функции (уже 2 вычисления: f(x1) и f(x2))
+
+        System.out.println("Начальный интервал: [" + a + ", " + b + "]");
+
+        while (Math.abs(b - a) > epsilon) {
+            // Выводим текущий интервал и значения функции
+            System.out.println("\nИтерация " + (iterations + 1) + ":");
+            System.out.println("  Интервал: [" + a + ", " + b + "]");
+            System.out.println("  x1 = " + x1 + ", f(x1) = " + f1);
+            System.out.println("  x2 = " + x2 + ", f(x2) = " + f2);
+
+            // Сравниваем значения функции
+            if (f1 < f2) {
+                // Минимум находится в интервале [a, x2]
+                b = x2;
+                x2 = x1;
+                f2 = f1;
+                x1 = b - phi * (b - a);
+                f1 = f(x1);
+            } else {
+                // Минимум находится в интервале [x1, b]
+                a = x1;
+                x1 = x2;
+                f1 = f2;
+                x2 = a + phi * (b - a);
+                f2 = f(x2);
+            }
+
+            // Увеличиваем счетчики
+            iterations++;
+            functionEvaluations++;
+        }
+
+        // Вычисляем точку минимума
+        double minPoint = (a + b) / 2;
+        double minValue = f(minPoint);
+
+        // Выводим результаты
+        System.out.println("\nРезультаты:");
+        System.out.println("Количество итераций: " + iterations);
+        System.out.println("Количество вычислений функции: " + functionEvaluations);
+        System.out.println("Точка минимума: " + minPoint);
+        System.out.println("Значение функции в точке минимума: " + minValue);
+
+        return minPoint;
+    }
+
+    public static void main(String[] args) {
+        double a = 20; // Начало интервала
+        double b = 30; // Конец интервала
+        double epsilon = 0.05; // Точность
+
+        double minPoint = goldenSectionSearch(a, b, epsilon);
+    }
+}
