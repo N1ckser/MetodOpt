@@ -1,0 +1,77 @@
+public class NewtonMethod {
+    // Функция f(x) = -ln(x)/x
+    public static double f(double x) {
+        return -Math.log(x) / x;
+    }
+
+    // Первая производная функции f'(x)
+    public static double fPrime(double x) {
+        return (1 / x) - (Math.log(x) / (x * x));
+    }
+
+    // Вторая производная функции f''(x)
+    public static double fSecondPrime(double x) {
+        return (-1 / (x * x)) - (Math.log(x) / (x * x * x)) + (2 / (x * x));
+    }
+
+    // Метод Ньютона для нахождения минимума
+    public static void newtonMethod(double x0, double epsilon, int maxIterations) {
+        double x = x0;
+        double fX = f(x);
+        int iteration = 0;
+        int funcCalls = 0;
+
+        System.out.println("Начальный интервал: [20.0, 30.0]");
+        System.out.println("Начальная точка: x0 = " + x0);
+
+        while (iteration < maxIterations) {
+            iteration++;
+            double fPrimeX = fPrime(x);
+            double fSecondPrimeX = fSecondPrime(x);
+            funcCalls += 3; // Учитываем вычисление f(x), f'(x) и f''(x)
+
+            // Печатаем значения первой и второй производных
+            System.out.println("  f'(x) = " + fPrimeX);
+            System.out.println("  f''(x) = " + fSecondPrimeX);
+
+            // Проверка на слишком малую вторую производную
+            if (Math.abs(fSecondPrimeX) < epsilon) {
+                System.out.println("  Вторая производная слишком мала, прекращаем.");
+                break;
+            }
+
+            // Вычисляем следующее приближение
+            double xNext = x - fPrimeX / fSecondPrimeX;
+            double fXNext = f(xNext);
+            funcCalls++;
+
+            // Печатаем интервал и значения функции
+            System.out.println("Итерация " + iteration + ":");
+            System.out.println("  Текущий интервал: [" + x + ", " + xNext + "]");
+            System.out.println("  f(x0) = " + fX + ", f(x1) = " + fXNext);
+
+            // Проверка на сходимость
+            if (Math.abs(xNext - x) < epsilon) {
+                System.out.println("\nРезультаты:");
+                System.out.println("Количество итераций: " + iteration);
+                System.out.println("Количество вычислений функции: " + funcCalls);
+                System.out.println("Точка минимума: " + xNext);
+                System.out.println("Значение функции в точке минимума: " + fXNext);
+                break;
+            }
+
+            // Переход к следующей итерации
+            x = xNext;
+            fX = fXNext;
+        }
+    }
+
+    public static void main(String[] args) {
+        double x0 = 25.0;  // Начальная точка
+        double epsilon = 0.01;  // Точность
+        int maxIterations = 100;  // Максимальное количество итераций
+
+        // Запуск метода Ньютона
+        newtonMethod(x0, epsilon, maxIterations);
+    }
+}
