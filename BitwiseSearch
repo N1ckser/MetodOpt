@@ -1,0 +1,69 @@
+public class Search {
+
+    // Функция, минимум которой мы ищем
+    public static double f(double x) {
+        return -Math.log(x) / x;
+    }
+
+    // Метод поразрядного поиска
+    public static double bitwiseSearch(double a, double b, double delta, double epsilon, double x0) {
+        double step = 1.0; // Начальный шаг
+        int iterations = 0; // Счетчик итераций
+        int functionEvaluations = 0; // Счетчик вычислений функции
+
+        System.out.println("Начальный интервал: [" + a + ", " + b + "]");
+        System.out.println("Начальная точка: x0 = " + x0);
+
+        while (step > epsilon) {
+            // Вычисляем следующую точку
+            double x1 = x0 + step;
+
+            // Проверяем, не вышли ли за границы интервала
+            if (x1 < a || x1 > b) {
+                break;
+            }
+
+            // Вычисляем значения функции в точках x0 и x1
+            double f0 = f(x0);
+            double f1 = f(x1);
+            functionEvaluations += 2;
+
+            // Выводим текущую итерацию
+            System.out.println("\nИтерация " + (iterations + 1) + ":");
+            System.out.println("  Текущий интервал: [" + x0 + ", " + x1 + "]");
+            System.out.println("  f(x0) = " + f0 + ", f(x1) = " + f1);
+
+            // Сравниваем значения функции
+            if (f1 < f0) {
+                // Продолжаем движение в том же направлении
+                x0 = x1;
+            } else {
+                // Меняем направление и уменьшаем шаг
+                step = step / 4;
+                x1 = x0 - step;
+            }
+
+            // Увеличиваем счетчик итераций
+            iterations++;
+        }
+
+        // Выводим результаты
+        System.out.println("\nРезультаты:");
+        System.out.println("Количество итераций: " + iterations);
+        System.out.println("Количество вычислений функции: " + functionEvaluations);
+        System.out.println("Точка минимума: " + x0);
+        System.out.println("Значение функции в точке минимума: " + f(x0));
+
+        return x0;
+    }
+
+    public static void main(String[] args) {
+        double a = 20; // Начало интервала
+        double b = 30; // Конец интервала
+        double delta = 0.01; // Константа различимости
+        double epsilon = 0.05; // Точность
+        double x0 = 25; // Начальная точка
+
+        double minPoint = bitwiseSearch(a, b, delta, epsilon, x0);
+    }
+}
